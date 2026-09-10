@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ExpenseCategorizer.Api/ExpenseCategorizer.Api.csproj" />
+  <Project Path="ExpenseCategorizer.Application/ExpenseCategorizer.Application.csproj" />
+  <Project Path="ExpenseCategorizer.Domain/ExpenseCategorizer.Domain.csproj" />
+  <Project Path="ExpenseCategorizer.Infrastructure/ExpenseCategorizer.Infrastructure.csproj" />
+  <Project Path="ExpenseCategorizer.Tests/ExpenseCategorizer.Tests.csproj" />
+</Solution>
