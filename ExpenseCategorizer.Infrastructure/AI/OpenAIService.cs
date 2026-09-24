@@ -1,11 +1,12 @@
-﻿using ExpenseCategorizer.Application;
+﻿using Azure.Identity;
+using ExpenseCategorizer.Application;
 using ExpenseCategorizer.Domain;
-
-using Azure.Identity;
 using OpenAI;
 using OpenAI.Responses;
-using System.Text.Json;
+using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Text.Json;
+using System;
 
 namespace ExpenseCategorizer.Infrastructure
 {
@@ -13,17 +14,21 @@ namespace ExpenseCategorizer.Infrastructure
     {
         public Task<ExpenseAnalysis> CategorizeAsync(ExpenseCategorizeRequest request)
         {
-            #pragma warning disable OPENAI001
+#pragma warning disable OPENAI001
+
 
             const string deploymentName = "gpt-4.1-mini";
-            const string endpoint = "https://jholynelorde-9665-resource.services.ai.azure.com/openai/v1";
+            // get endpoint and api key and fail fast if not provided
+            string? endpointEnv = Environment.GetEnvironmentVariable("API_ENDPOINT");
+            if (string.IsNullOrWhiteSpace(endpointEnv)) throw new InvalidOperationException("API_ENDPOINT environment variable is not set.");
+            string endpoint = endpointEnv;
 
-            BearerTokenPolicy tokenPolicy = new(
-                new DefaultAzureCredential(),
-                "https://ai.azure.com/.default");
+            string? apiKeyEnv = Environment.GetEnvironmentVariable("API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKeyEnv)) throw new InvalidOperationException("API_KEY environment variable is not set.");
+            string apiKey = apiKeyEnv;
 
             ResponsesClient client = new(
-                authenticationPolicy: tokenPolicy,
+                credential: new ApiKeyCredential(apiKey),
                 options: new ResponsesClientOptions()
                 {
                     Endpoint = new Uri(endpoint),
